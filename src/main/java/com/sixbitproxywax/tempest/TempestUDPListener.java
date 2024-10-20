@@ -8,26 +8,26 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 
 public class TempestUDPListener {
-  private static final int PORT = 50222; // Default Tempest UDP port
+    private static final int PORT = 50222; // Default Tempest UDP port
 
-  public static void main(String[] args) throws Exception {
-    EventLoopGroup group = new NioEventLoopGroup();
-    try {
-      Bootstrap b = new Bootstrap();
-      b.group(group)
-          .channel(NioDatagramChannel.class)
-          .handler(new ChannelInitializer<NioDatagramChannel>() {
-            @Override
-            public void initChannel(NioDatagramChannel ch) {
-              ch.pipeline().addLast(new TempestPacketHandler());
-            }
-          });
+    public static void main(String[] args) throws Exception {
+        EventLoopGroup group = new NioEventLoopGroup();
+        try {
+            Bootstrap b = new Bootstrap();
+            b.group(group)
+                    .channel(NioDatagramChannel.class)
+                    .handler(new ChannelInitializer<NioDatagramChannel>() {
+                        @Override
+                        public void initChannel(NioDatagramChannel ch) {
+                            ch.pipeline().addLast(new TempestPacketHandler());
+                        }
+                    });
 
-      ChannelFuture f = b.bind(PORT).sync();
-      System.out.println("Listening for UDP packets on port " + PORT + "...");
-      f.channel().closeFuture().sync();
-    } finally {
-      group.shutdownGracefully();
+            ChannelFuture f = b.bind(PORT).sync();
+            System.out.println("Listening for UDP packets on port " + PORT + "...");
+            f.channel().closeFuture().sync();
+        } finally {
+            group.shutdownGracefully();
+        }
     }
-  }
 }
